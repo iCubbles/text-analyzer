@@ -1,0 +1,100 @@
+{
+  "name": "text-analyzer",
+  "groupId": "",
+  "version": "0.1.0-SNAPSHOT",
+  "modelVersion": "9.1.1",
+  "docType": "webpackage",
+  "author": {
+    "name": "Edwin Gamboa",
+    "email": "edwingamboa355@gmail.com"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "man": [],
+  "artifacts": {
+    "apps": [
+      {
+        "artifactId": "docs",
+        "description": "Generated webpackage documentation.",
+        "runnables": [
+          {
+            "name": "docs",
+            "path": "/index.html",
+            "description": "Show the interface of this component."
+          }
+        ]
+      }
+    ],
+    "elementaryComponents": [
+      {
+        "artifactId": "word-count",
+        "description": "Component to count words occurrences within a text",
+        "runnables": [
+          {
+            "name": "demo",
+            "path": "/demo/index.html",
+            "description": "Demo app..."
+          },
+          {
+            "name": "docs",
+            "path": "/docs/index.html",
+            "description": "Show the interface of this component."
+          }
+        ],
+        "resources": [
+          "word-count.html"
+        ],
+        "dependencies": [
+          {
+            "webpackageId": "cubx.core.rte@2.4.0",
+            "artifactId": "cubxpolymer"
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "text",
+            "description": "Text to be analyzed",
+            "type": "string",
+            "direction": [
+              "input"
+            ]
+          },
+          {
+            "slotId": "whitelist",
+            "description": "Array of terms to be considered (only)",
+            "type": "array",
+            "direction": [
+              "input"
+            ]
+          },
+          {
+            "slotId": "blacklist",
+            "description": "Array of terms to be excluded",
+            "type": "array",
+            "direction": [
+              "input"
+            ]
+          },
+          {
+            "slotId": "wordCount",
+            "description": "Array counting words of text. Each element is of form { term:string, count:number }",
+            "type": "array",
+            "direction": [
+              "output"
+            ]
+          },
+          {
+            "slotId": "overallCount",
+            "description": "Number of words of string",
+            "type": "number",
+            "direction": [
+              "output"
+            ]
+          }
+        ]
+      }
+    ],
+    "compoundComponents": [],
+    "utilities": []
+  }
+}
