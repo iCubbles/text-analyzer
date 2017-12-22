@@ -1,4 +1,5 @@
 ## text-analyzer
 
-<hr/>
-Note This page is generated based on the markdown-syntax. For details see <http://daringfireball.net/projects/markdown/syntax/>
+This project contains the [text-analyzer](https://github.com/iCubbles/text-analyzer/tree/master/webpackages/text-analyzer) webpackage, which contains the necessary Cubbles components for analyzing texts.
+
+[Want to get to know the Cubbles Platform?](https://cubbles.github.io)
