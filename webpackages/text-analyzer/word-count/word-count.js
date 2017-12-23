@@ -67,15 +67,15 @@
     _wordCountObjectToWordCountArray: function (wordCountObject) {
       var wordCountArray = [];
       Object.keys(wordCountObject).forEach(function (word) {
-        wordCountArray.push({ term: word, count: wordCountObject[word] });
-      });
+        this._binaryInsert({ term: word, count: wordCountObject[word] }, wordCountArray);
+      }.bind(this));
       return wordCountArray;
     },
 
     /**
      * Example :
      * var a = [2,7,9];
-     * binaryInsert(8, a);
+     * _binaryInsert(8, a);
      *
      * It will output a = [2,7,8,9]
      * Adapted from: https://machinesaredigging.com/2014/04/27/binary-insert-how-to-keep-an-array-sorted-as-you-insert-data-in-it/
@@ -92,12 +92,12 @@
         return;
       }
 
-      if(value.count > array[end].count){
+      if(value.count <= array[end].count){
         array.splice(end + 1, 0, value);
         return;
       }
 
-      if(value.count < array[start].count){
+      if(value.count >= array[start].count){
         array.splice(start, 0, value);
         return;
       }
@@ -106,13 +106,13 @@
         return;
       }
 
-      if(value.count <= array[m].count){
-        this.binaryInsert(value, array, start, m - 1);
+      if(value.count > array[m].count){
+        this._binaryInsert(value, array, start, m - 1);
         return;
       }
 
-      if(value.count > array[m].count){
-        this.binaryInsert(value, array, m + 1, end);
+      if(value.count < array[m].count){
+        this._binaryInsert(value, array, m + 1, end);
         return;
       }
     }
