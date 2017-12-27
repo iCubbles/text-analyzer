@@ -6,20 +6,65 @@
     <title>&lt;word-count&gt; demo</title>
 
     <script src="../../../cubx.core.rte@2.4.0/webcomponents-lite/webcomponents-lite.js"></script>
-
-    <!--
-        Refer to the crc-loader artifact from a Cubbles-Base.
-        Take care: All other dependencies are expected to be available within the same Base!
-
-        Want to add a 'main' -script to be executed after the dependencies have been loaded?
-        If yes, add the following attribute: data-crc-main="js/my-script.js"
-    -->
+    <script>
+        window.cubx = {
+            "CRCInit": {
+                "rootDependencies": [
+                    {
+                        "webpackageId": "com.incowia.basic-html-components@1.8",
+                        "artifactId": "cubx-textarea"
+                    },
+                    {
+                        "webpackageId": "wordcloud@1.0.0",
+                        "artifactId": "wordcloud-default"
+                    },
+                    {
+                        "webpackageId": "generic-mapper@1.1.2",
+                        "artifactId": "cubx-generic-mapper"
+                    }
+                ]
+            }
+        }
+    </script>
     <script src="../../../cubx.core.rte@2.4.0/crc-loader/js/main.js" data-crcinit-loadcif="true"></script>
 
 </head>
 <body>
-<!--  Place cubbles components there. -->
-<word-count cubx-webpackage-id="this"></word-count>
+<cubx-textarea cubx-webpackage-id="com.incowia.basic-html-components@1.8">
+    <cubx-core-init>
+        <cubx-core-slot-init slot="cols"  style="display:none">80</cubx-core-slot-init>
+        <cubx-core-slot-init slot="rows"  style="display:none">15</cubx-core-slot-init>
+    </cubx-core-init>
+    <cubx-core-connections>
+        <cubx-core-connection source="value" destination="wordCount:text" connection-id="textCon"></cubx-core-connection>
+    </cubx-core-connections>
+</cubx-textarea>
+<word-count cubx-webpackage-id="this" id="wordCount">
+    <cubx-core-connections>
+        <cubx-core-connection source="wordCount" destination="genericMapper:inputArray" connection-id="mapArray"></cubx-core-connection>
+    </cubx-core-connections>
+</word-count>
+<cubx-generic-mapper id="genericMapper" cubx-webpackage-id="generic-mapper@1.1.2">
+    <cubx-core-init>
+        <cubx-core-slot-init slot="mapperFunction" style="display:none">"function (array) { var list = []; if (array.length > 0) { var proportion = 12 / array[0].count; array.forEach(function (wordCount) { list.push([wordCount.term, Math.round(wordCount.count * proportion)]); }); } return list; }"</cubx-core-slot-init>
+    </cubx-core-init>
+    <cubx-core-connections>
+        <cubx-core-connection connection-id="countMappper" source="mappedArray" destination="wordcloud:list"></cubx-core-connection>
+    </cubx-core-connections>
+</cubx-generic-mapper>
+<wordcloud-default cubx-webpackage-id="wordcloud@1.0.0" id="wordcloud"></wordcloud-default>
 
+<script>
+    var f = function (array) {
+        var list = [];
+        if (array.length > 0) {
+            var proportion = 12 / array[0].count;
+            array.forEach(function (wordCount) {
+                list.push([wordCount.term, Math.round(wordCount.count * proportion)]);
+            });
+        }
+        return list;
+    }
+</script>
 </body>
 </html>
