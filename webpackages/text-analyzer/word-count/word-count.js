@@ -43,18 +43,65 @@
       this._setCountSlots(newText);
     },
 
+    /**
+     *  Observe the Cubbles-Component-Model: If value for slot 'whitelist' has changed ...
+     */
+    modelWhitelistChanged: function (whitelist) {
+      this._setCountSlots(this.getText());
+    },
+
+    /**
+     *  Observe the Cubbles-Component-Model: If value for slot 'blacklist' has changed ...
+     */
+    modelBlacklistChanged: function (blacklist) {
+      this._setCountSlots(this.getText());
+    },
+
     _countWords: function (text) {
       var splitText = text.trim().split(/\s+/);
       var wordCount = {};
+      if (Array.isArray(this.getWhitelist())) {
+        initWordCount.call(this);
+      }
       var overallCount = 0;
       splitText.forEach(function (word) {
+        if (Array.isArray(this.getWhitelist()) && this.getWhitelist().length > 0) {
+          if (isWhiteWord.call(this, word) && !isBlackWord.call(this, word)) {
+            increaseCount(word);
+          }
+          return;
+        }
+        if (!this.getBlacklist() || !isBlackWord.call(this, word)) {
+          increaseCount(word);
+        }
+      }.bind(this));
+
+      function increaseCount(word) {
         overallCount++;
         if (!wordCount.hasOwnProperty(word)) {
           wordCount[word] = 1;
         } else {
           wordCount[word]++;
         }
-      });
+      }
+
+      function initWordCount() {
+        var self = this;
+        this.getWhitelist().forEach(function (word) {
+          if (!isBlackWord.call(self, word)){
+            wordCount[word] = 0;
+          }
+        });
+      }
+
+      function isBlackWord(word) {
+        return Array.isArray(this.getBlacklist()) && this.getBlacklist().indexOf(word) > -1;
+      }
+
+      function isWhiteWord(word) {
+        return Array.isArray(this.getWhitelist()) && this.getWhitelist().indexOf(word) > -1;
+      }
+
       return {wordCount: wordCount, overallCount: overallCount};
     },
 
