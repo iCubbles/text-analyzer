@@ -65,6 +65,7 @@
       }
       var overallCount = 0;
       splitText.forEach(function (word) {
+        word = word.toLowerCase();
         if (Array.isArray(this.getWhitelist()) && this.getWhitelist().length > 0) {
           if (isWhiteWord.call(this, word) && !isBlackWord.call(this, word)) {
             increaseCount(word);
@@ -88,6 +89,7 @@
       function initWordCount() {
         var self = this;
         this.getWhitelist().forEach(function (word) {
+          word = word.toLowerCase();
           if (!isBlackWord.call(self, word)){
             wordCount[word] = 0;
           }
