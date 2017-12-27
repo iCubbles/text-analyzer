@@ -53,18 +53,5 @@
     </cubx-core-connections>
 </cubx-generic-mapper>
 <wordcloud-default cubx-webpackage-id="wordcloud@1.0.0" id="wordcloud"></wordcloud-default>
-
-<script>
-    var f = function (array) {
-        var list = [];
-        if (array.length > 0) {
-            var proportion = 12 / array[0].count;
-            array.forEach(function (wordCount) {
-                list.push([wordCount.term, Math.round(wordCount.count * proportion)]);
-            });
-        }
-        return list;
-    }
-</script>
 </body>
 </html>
