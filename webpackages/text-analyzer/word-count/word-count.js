@@ -57,15 +57,18 @@
       this._setCountSlots(this.getText());
     },
 
+    _cleanText: function (text) {
+      return text.replace(/[^\w\s-]/g, "").replace(/(\r\n|\n|\r)/gm, " ").toLowerCase();
+    },
+
     _countWords: function (text) {
-      var splitText = text.trim().split(/\s+/);
+      var splitText = this._cleanText(text).split(/\s+/);
       var wordCount = {};
       if (Array.isArray(this.getWhitelist())) {
         initWordCount.call(this);
       }
       var overallCount = 0;
       splitText.forEach(function (word) {
-        word = word.toLowerCase();
         if (Array.isArray(this.getWhitelist()) && this.getWhitelist().length > 0) {
           if (isWhiteWord.call(this, word) && !isBlackWord.call(this, word)) {
             increaseCount(word);
@@ -155,12 +158,12 @@
         return;
       }
 
-      if(value.count > array[m].count){
+      if(value.count >= array[m].count){
         this._binaryInsert(value, array, start, m - 1);
         return;
       }
 
-      if(value.count < array[m].count){
+      if(value.count <= array[m].count){
         this._binaryInsert(value, array, m + 1, end);
         return;
       }
