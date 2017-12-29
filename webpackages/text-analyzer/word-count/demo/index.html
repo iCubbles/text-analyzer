@@ -21,6 +21,10 @@
                     {
                         "webpackageId": "generic-mapper@1.1.2",
                         "artifactId": "cubx-generic-mapper"
+                    },
+                    {
+                        "webpackageId": "bootstrap-3.3.5@1.1.1",
+                        "artifactId": "bootstrap-bootstrap-css-only"
                     }
                 ]
             }
@@ -30,28 +34,106 @@
 
 </head>
 <body>
-<cubx-textarea cubx-webpackage-id="com.incowia.basic-html-components@1.8">
-    <cubx-core-init>
-        <cubx-core-slot-init slot="cols"  style="display:none">80</cubx-core-slot-init>
-        <cubx-core-slot-init slot="rows"  style="display:none">15</cubx-core-slot-init>
-    </cubx-core-init>
-    <cubx-core-connections>
-        <cubx-core-connection source="value" destination="wordCount:text" connection-id="textCon"></cubx-core-connection>
-    </cubx-core-connections>
-</cubx-textarea>
-<word-count cubx-webpackage-id="this" id="wordCount">
-    <cubx-core-connections>
-        <cubx-core-connection source="wordCount" destination="genericMapper:inputArray" connection-id="mapArray"></cubx-core-connection>
-    </cubx-core-connections>
-</word-count>
-<cubx-generic-mapper id="genericMapper" cubx-webpackage-id="generic-mapper@1.1.2">
-    <cubx-core-init>
-        <cubx-core-slot-init slot="mapperFunction" style="display:none">"function (array) { var list = []; if (array.length > 0) { var proportion = 12 / array[0].count; array.forEach(function (wordCount) { list.push([wordCount.term, Math.round(wordCount.count * proportion)]); }); } return list; }"</cubx-core-slot-init>
-    </cubx-core-init>
-    <cubx-core-connections>
-        <cubx-core-connection connection-id="countMappper" source="mappedArray" destination="wordcloud:list"></cubx-core-connection>
-    </cubx-core-connections>
-</cubx-generic-mapper>
-<wordcloud-default cubx-webpackage-id="wordcloud@1.0.0" id="wordcloud"></wordcloud-default>
+<div class="container-fluid">
+    <h1>&lt;word-count&gt; + &lt;wordcloud-default&gt; + &lt;generic-mapper&gt; demo</h1>
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>&lt;word-count&gt;</h2>
+            <cubx-textarea cubx-webpackage-id="com.incowia.basic-html-components@1.8" id="textTa">
+                <cubx-core-init style="display:none">
+                    <cubx-core-slot-init slot="label">"text (string)"</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="cols">80</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="rows">12</cubx-core-slot-init>
+                </cubx-core-init>
+                <cubx-core-connections>
+                    <cubx-core-connection source="value" destination="wordCount:text" connection-id="textCon"></cubx-core-connection>
+                </cubx-core-connections>
+            </cubx-textarea>
+            <cubx-textarea cubx-webpackage-id="com.incowia.basic-html-components@1.8" id="blacklistTa">
+                <cubx-core-init style="display:none">
+                    <cubx-core-slot-init slot="label">"blacklist (JSON valid array of strings; e.g: [\"a\", \"b\"])"</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="cols">80</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="rows">3</cubx-core-slot-init>
+                </cubx-core-init>
+                <cubx-core-connections>
+                    <cubx-core-connection source="value" destination="blacklistMapper:inputString" connection-id="blacklistCon"></cubx-core-connection>
+                </cubx-core-connections>
+            </cubx-textarea>
+            <cubx-textarea cubx-webpackage-id="com.incowia.basic-html-components@1.8" id="whitelistTa">
+                <cubx-core-init style="display:none">
+                    <cubx-core-slot-init slot="label">"whitelist (JSON valid array of strings; e.g: [\"a\", \"b\"])"</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="value">"[]"</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="cols">80</cubx-core-slot-init>
+                    <cubx-core-slot-init slot="rows">3</cubx-core-slot-init>
+                </cubx-core-init>
+                <cubx-core-connections>
+                    <cubx-core-connection source="value" destination="whitelistMapper:inputString" connection-id="whitelistCon"></cubx-core-connection>
+                </cubx-core-connections>
+            </cubx-textarea>
+            <cubx-generic-mapper id="listMapper" cubx-webpackage-id="generic-mapper@1.1.2">
+                <cubx-core-connections>
+                    <cubx-core-connection connection-id="countMappper" source="mappedArray" destination="wordcloud:list"></cubx-core-connection>
+                </cubx-core-connections>
+            </cubx-generic-mapper>
+            <cubx-generic-mapper id="whitelistMapper" cubx-webpackage-id="generic-mapper@1.1.2">
+                <cubx-core-connections>
+                    <cubx-core-connection connection-id="whitelistMappper" source="mappedArray" destination="wordCount:whitelist"></cubx-core-connection>
+                </cubx-core-connections>
+            </cubx-generic-mapper>
+            <cubx-generic-mapper id="blacklistMapper" cubx-webpackage-id="generic-mapper@1.1.2">
+                <cubx-core-connections>
+                    <cubx-core-connection connection-id="blacklistMappper" source="mappedArray" destination="wordCount:blacklist"></cubx-core-connection>
+                </cubx-core-connections>
+            </cubx-generic-mapper>
+            <word-count cubx-webpackage-id="this" id="wordCount">
+                <cubx-core-connections>
+                    <cubx-core-connection source="wordCount" destination="listMapper:inputArray" connection-id="mapArray"></cubx-core-connection>
+                </cubx-core-connections>
+            </word-count>
+        </div>
+        <div class="col-sm-6">
+            <h2>&lt;wordcloud-default&gt;</h2>
+            <wordcloud-default cubx-webpackage-id="wordcloud@1.0.0" id="wordcloud">
+                <cubx-core-init style="display:none">
+                    <cubx-core-slot-init slot="useCanvas">false</cubx-core-slot-init>
+                </cubx-core-init>
+            </wordcloud-default>
+        </div>
+    </div>
+</div>
+
 </body>
+
+<script>
+    (function () {
+        'use strict';
+        function wordcountToWordcloudList (value) {
+            var list = [];
+            if (value.length > 0) {
+                var proportion = 12 / value[0].count;
+                value.forEach(function (wordCount) {
+                    list.push([wordCount.term, Math.max(Math.round(wordCount.count * proportion), 4)]);
+                });
+            }
+            return list;
+        }
+
+        function stringToList(value) {
+            return JSON.parse(value);
+        }
+
+        var listMapper = document.querySelector('#listMapper');
+        var blacklistMapper = document.querySelector('#blacklistMapper');
+        var whitelistMapper = document.querySelector('#whitelistMapper');
+        var textTa = document.querySelector('#textTa');
+        var blacklistTa = document.querySelector('#blacklistTa');
+        document.addEventListener('cifReady', function () {
+            listMapper.setMapperFunction(wordcountToWordcloudList.toString());
+            blacklistMapper.setMapperFunction(stringToList.toString());
+            whitelistMapper.setMapperFunction(stringToList.toString());
+            blacklistTa.setValue('["a", "an", "the", "of", "for", "and", "are", "them", "as", "with", "your"]');
+            textTa.setValue('Enhance Your Webapps With Cubbles Components.\n\nDecompose the complexity of your use cases. Identify cubbles and declare their interfaces as well as connections between them. Develop, test and maintain cubbles within their isolated codebase over a long term with manageable risks. If appropriated Cubbles are already available, just use or adapt them for your context. Finally: Easily integrate Cubbles Components into your webapps.\n\nUse Professional Services to Satisfy You and Your Customers. Demos & Training: Want to know all about component based development with Cubbles? Let\'s arrange demo- and training sessions. Support for Technical Design and Development: We provide support for the technical design of components. You are looking for components which are ready-to-use? We are glad to develop them for you. Hosting: We provide server-side stores for your components on a Platform as a Service (PaaS) basis. In addition we offer on-premise installation and support.');
+        });
+    })();
+</script>
 </html>
